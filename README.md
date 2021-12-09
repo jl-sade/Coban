@@ -11,14 +11,14 @@ Section de câble : OK
 Chute de tension : NOK
 
 ### **Conversions**
-Conversion : NOK
+Conversion : OK
 
-Conversion AWG : NOK
+Conversion AWG : OK
 
 ### **SONO-VIDEO**
-Champs de vision : NOK
+Champs de vision : OK
 
-Sonorisation : NOK
+Sonorisation : OK
 
 ### **Chauffage/Clim**
 Bilans : NOK

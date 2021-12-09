@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#-*- coding: iso-8859-15 -*-
+# -*- coding: iso-8859-15 -*-
 
 ##----------------------------------------------------------------------------------------------
 ## Coban - Module de calcul de chute de tension
@@ -53,61 +53,62 @@ sectCu = '1.5 2.5 4 6 10 16 25  35 50 70 95 120 150 185 240 300 400 500 630'.spl
 sectAlu = '10 16 25 35 50 70 95 120 150 185 240 300 400 630'.split()
 statusText = u"Chute de tension"
 
-      
 
 class ModuleChute(wx.Frame):
     """Calcul des sections de câble"""
+
     def __init__(self, parent):
-        wx.Frame.__init__(self, parent, -1, title = version,
-                      style=wx.DEFAULT_FRAME_STYLE 
-                      ^(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX))
+        wx.Frame.__init__(self, parent, -1, title=version,
+                          style=wx.DEFAULT_FRAME_STYLE
+                                ^ (wx.RESIZE_BORDER | wx.MAXIMIZE_BOX))
         self.parent = parent
-        
-        #------- Création du panel -----------------------        
-        panel =  wx.Panel(self, -1, style = wx.TAB_TRAVERSAL
-                     | wx.CLIP_CHILDREN
-                     | wx.FULL_REPAINT_ON_RESIZE
-                     )
-        
-        #---------- création du sizer principal ----------------
-        
+
+        # ------- Création du panel -----------------------
+        panel = wx.Panel(self, -1, style=wx.TAB_TRAVERSAL
+                                         | wx.CLIP_CHILDREN
+                                         | wx.FULL_REPAINT_ON_RESIZE
+                         )
+
+        # ---------- création du sizer principal ----------------
+
         self.gbs = wx.GridBagSizer(hgap=5, vgap=5)
-        
-        #------- Création de statusbar -----------------        
+
+        # ------- Création de statusbar -----------------
         self.CreateStatusBar()
         self.SetStatusText(statusText)
-        
-        #---- Création de la barre d'outils (toolbar) ---------------------------------------------------
 
-        #-------------- import des images ----------------------
-        
+        # ---- Création de la barre d'outils (toolbar) ---------------------------------------------------
+
+        # -------------- import des images ----------------------
+
         from modcoban import bmp_aide, bmp_quit
-        
+
         img_aide = wx.Bitmap(bmp_aide, wx.BITMAP_TYPE_PNG)
         img_quit = wx.Bitmap(bmp_quit, wx.BITMAP_TYPE_PNG)
-        
-        self.tbar = wx.ToolBar(self, -1, style= wx.TB_HORIZONTAL)
+
+        # self.tbar = self.CreateToolBar(style=wx.TB_HORIZONTAL)
+        self.tbar = wx.ToolBar(self, -1, style=wx.TB_HORIZONTAL)
         # Hack pour windows :
         # ajustement de la taille des boutons aux images (24x24 px):
-        self.tbar.SetToolBitmapSize((24,24))
-        
-        self.tbar.AddSimpleTool(90, 
-                                img_aide,
-                                shortHelpString = u"Aide",
-                                longHelpString = u"Valeurs maxi des chutes de tension")
+        self.tbar.SetToolBitmapSize((24, 24))
+
+        self.tbar.AddTool(90,
+                          '',
+                          img_aide,
+                          shortHelp=u"Aide",
+                          longHelp=u"Valeurs maxi des chutes de tension")
         self.tbar.AddSeparator()
-        self.tbar.AddSimpleTool(99, 
-                           img_quit,
-                           shortHelpString = "Quitter",
-                           longHelpString = "Quitter ce module")
+        self.tbar.AddTool(99,
+                          '',
+                          img_quit,
+                          shortHelp=u"Quitter",
+                          longHelp=u"Quitter ce module")
         self.tbar.Realize()
         self.SetToolBar(self.tbar)
-        
-        
-        
-        #------------- Création des widgets ---------------------
+
+        # ------------- Création des widgets ---------------------
         # Mono / Tri
-        listeCircuit=[u'monophasé', u'triphasé']
+        listeCircuit = [u'monophasé', u'triphasé']
         labelMonoTri = wx.StaticText(panel, -1, u'Type de circuit')
         self.monoTri = wx.Choice(panel, -1, choices=listeCircuit)
         self.monoTri.SetSelection(1)
@@ -130,7 +131,7 @@ class ModuleChute(wx.Frame):
         # Courant d'emploi
         labelCourant = wx.StaticText(panel, -1, u"Courant d'emploi\n(en Ampères)")
         self.courant = wx.SpinCtrl(panel, -1, "", size=self.cable.GetSize())
-        self.courant.SetRange(1,999)
+        self.courant.SetRange(1, 999)
         self.courant.SetValue(100)
         # Tension Ph/N
         labelTension = wx.StaticText(panel, -1, u'Tension entre phase\net neutre (en Volts)')
@@ -145,11 +146,11 @@ class ModuleChute(wx.Frame):
             self.btnCalc.Enable(False)
         # Séparation
         sep = wx.BoxSizer(wx.VERTICAL)
-        sep.Add(wx.StaticLine(panel), 0, wx.EXPAND|wx.ALL, 5)
+        sep.Add(wx.StaticLine(panel), 0, wx.EXPAND | wx.ALL, 5)
         # Résultats
         labelResult = wx.StaticText(panel, -1, u'Résultats')
         labelResult.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD))
-        labelChuteDelta=wx.StaticText(panel, -1, u'Chute de tension\n(en %)')
+        labelChuteDelta = wx.StaticText(panel, -1, u'Chute de tension\n(en %)')
         self.labelDeltaU = wx.StaticText(panel, -1, u'... %')
         self.labelDeltaU.SetForegroundColour('blue')
         self.labelDeltaU.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD))
@@ -157,56 +158,52 @@ class ModuleChute(wx.Frame):
         self.labelChuteVolt = wx.StaticText(panel, -1, u'... V')
         self.labelChuteVolt.SetForegroundColour('blue')
         self.labelChuteVolt.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD))
-        
-        #------------------ binds ------------------------------
+
+        # ------------------ binds ------------------------------
         self.Bind(wx.EVT_CHOICE, self.onSection, self.cable)
-        #self.Bind(wx.EVT_CHOICE, self.onRaz, id=wx.ID_ANY)
+        # self.Bind(wx.EVT_CHOICE, self.onRaz, id=wx.ID_ANY)
         self.Bind(wx.EVT_SPINCTRL, self.onRaz)
         self.Bind(wx.EVT_BUTTON, self.onCalcul, self.btnCalc)
         self.Bind(wx.EVT_TOOL, self.onAide, id=90)
         self.Bind(wx.EVT_CLOSE, self.onQuitter)
         self.Bind(wx.EVT_TOOL, self.onQuitter, id=99)
-        
-        #---------------- placement des widgets ------------------
-        self.gbs.Add(labelMonoTri, (0,0))
-        self.gbs.Add(self.monoTri, (0,1))
-        self.gbs.Add(self.labelCosPhi, (0,2))
-        self.gbs.Add(labelCable, (1,0))
-        self.gbs.Add(self.cable, (1,1))
-        self.gbs.Add(labelLg, (2,0))
-        self.gbs.Add(self.lg, (2,1))
-        self.gbs.Add(labelSection, (3,0))
-        self.gbs.Add(self.section, (3,1))
-        self.gbs.Add(labelCourant, (4,0))
-        self.gbs.Add(self.courant, (4,1))
-        self.gbs.Add(labelTension, (5,0))
-        self.gbs.Add(self.tension, (5,1))
-        self.gbs.Add(self.btnCalc, (6,2))
-        self.gbs.Add(sep, (7,0), (1,4),wx.EXPAND)
-        self.gbs.Add(labelResult, (8,0))
-        self.gbs.Add(labelChuteDelta, (9,0))
-        self.gbs.Add(self.labelDeltaU, (9,1))
-        self.gbs.Add(labelChuteV, (10,0))
-        self.gbs.Add(self.labelChuteVolt, (10,1))
-                
-        #-------- réglage de la taille ---------------------------
+
+        # ---------------- placement des widgets ------------------
+        self.gbs.Add(labelMonoTri, (0, 0))
+        self.gbs.Add(self.monoTri, (0, 1))
+        self.gbs.Add(self.labelCosPhi, (0, 2))
+        self.gbs.Add(labelCable, (1, 0))
+        self.gbs.Add(self.cable, (1, 1))
+        self.gbs.Add(labelLg, (2, 0))
+        self.gbs.Add(self.lg, (2, 1))
+        self.gbs.Add(labelSection, (3, 0))
+        self.gbs.Add(self.section, (3, 1))
+        self.gbs.Add(labelCourant, (4, 0))
+        self.gbs.Add(self.courant, (4, 1))
+        self.gbs.Add(labelTension, (5, 0))
+        self.gbs.Add(self.tension, (5, 1))
+        self.gbs.Add(self.btnCalc, (6, 2))
+        self.gbs.Add(sep, (7, 0), (1, 4), wx.EXPAND)
+        self.gbs.Add(labelResult, (8, 0))
+        self.gbs.Add(labelChuteDelta, (9, 0))
+        self.gbs.Add(self.labelDeltaU, (9, 1))
+        self.gbs.Add(labelChuteV, (10, 0))
+        self.gbs.Add(self.labelChuteVolt, (10, 1))
+
+        # -------- réglage de la taille ---------------------------
         panel.SetSizerAndFit(self.gbs)
         self.SetClientSize(panel.GetSize())
-        
-        
+
     def onSection(self, evt):
-        if self.cable.GetSelection() == 0 :
+        if self.cable.GetSelection() == 0:
             self.section.SetItems(sectCu)
             self.section.SetSelection(6)
-        else :
+        else:
             self.section.SetItems(sectAlu)
             self.section.SetSelection(0)
-        
-        
+
         self.onRaz(self)
-        
-        
-        
+
     def onAide(self, evt):
         msgAide = (u'Alimentation entre disjoncteur de branchement et tableau de répartition :\n'
                    u'  - Chute de tension maximale : 2%\n\n'
@@ -222,36 +219,33 @@ class ModuleChute(wx.Frame):
         dlg = wx.MessageDialog(self, msgAide,
                                u'Mémo Chute de tension',
                                wx.OK | wx.ICON_INFORMATION
-                               #wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
+                               # wx.YES_NO | wx.NO_DEFAULT | wx.CANCEL | wx.ICON_INFORMATION
                                )
         dlg.ShowModal()
         dlg.Destroy()
-        
-    
-        
+
     def onRaz(self, evt):
         self.labelChuteVolt.SetLabel('... V')
         self.labelDeltaU.SetLabel('... %')
         if self.monoTri.GetSelection() == 0:
             self.labelCosPhi.SetLabel(u'')
-        else :
+        else:
             self.labelCosPhi.SetLabel(u'cos Phi = 0,8')
-            
-        
+
     def onCalcul(self, evt):
         # import si mono ou tri
-        if self.monoTri.GetSelection()==0:
+        if self.monoTri.GetSelection() == 0:
             b = 2
             cosPhi = 1
             sinPhi = 1
-        else : 
+        else:
             b = 1
             cosPhi = 0.8
             sinPhi = 0.6
         # import de la résistivité
         if self.cable.GetSelection() == 0:
             rau1 = 23
-        else :
+        else:
             rau1 = 37
         # import de la longueur
         L = self.lg.GetValue()
@@ -268,17 +262,17 @@ class ModuleChute(wx.Frame):
             Uo = 240
         elif self.tension.GetSelection() == 3:
             Uo = 380
-        else :
+        else:
             Uo = 400
         # coef lambda
         Lambda = 0.08
-        
+
         # résultats
-        u = round((b*(rau1*(L/S)*cosPhi+Lambda*L*sinPhi)*Ib)/1000, 3)
-        deltaU = round((100*(u/Uo)), 2)
-        self.labelChuteVolt.SetLabel(u'%s V'%u)
-        self.labelDeltaU.SetLabel((u'%s '%deltaU)+'%')
-    
+        u = round((b * (rau1 * (L / S) * cosPhi + Lambda * L * sinPhi) * Ib) / 1000, 3)
+        deltaU = round((100 * (u / Uo)), 2)
+        self.labelChuteVolt.SetLabel(u'%s V' % u)
+        self.labelDeltaU.SetLabel((u'%s ' % deltaU) + '%')
+
     def onQuitter(self, evt):
         """Quitter l'application"""
         self.parent.btnChute.Enable(True)
