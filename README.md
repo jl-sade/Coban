@@ -4,3 +4,27 @@ Coban est un logiciel métier, conçu en partenariat avec des professionnels de 
 Son ergonomie et sa facilité d'emploi en font l'outil idéal pour faciliter le choix du matériel, quelque soit votre domaine d'activité.
 
 Source : https://coban.tuxfamily.org/
+
+### **Electricité**
+Section de câble : OK
+
+Chute de tension : NOK
+
+### **Conversions**
+Conversion : NOK
+
+Conversion AWG : NOK
+
+### **SONO-VIDEO**
+Champs de vision : NOK
+
+Sonorisation : NOK
+
+### **Chauffage/Clim**
+Bilans : NOK
+
+### **Eclairage**
+Eclairage interieur : NOK
+
+
+
